@@ -1,8 +1,10 @@
 import "./App.css";
 import React from "react";
+// import axios from "axios";
+// import config from "./config/config.json";
+import getData from "./api/index";
 import ListItems from "./Components/ListItems/index";
-
-const axios = require("axios");
+import TextField from "@material-ui/core/TextField";
 
 class App extends React.Component {
   constructor(props) {
@@ -11,14 +13,14 @@ class App extends React.Component {
       data: [],
       value: "",
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
+  handleChange = (event) => {
+    this.setState({
+      value: event.target.value,
+    });
+    console.log(this.state.value);
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -26,17 +28,9 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    axios
-      .get(
-        "https://api.nasa.gov/planetary/apod" +
-          "?api_key=" +
-          "adnadkOeaqHy7djqeghPkQsu6puT7nMRX6Fifnth" +
-          "&date=" +
-          this.state.value
-      )
+    getData(this.state.value, this.state.startDate, this.state.endDate)
       .then((result) => {
-        // console.log(result);
-
+        console.log(result);
         this.setState({
           data: [result.data],
         });
@@ -45,10 +39,14 @@ class App extends React.Component {
       .catch(function (error) {
         // handle error
         console.log(error);
-      })
-      .then(() => {
-        // always executed
       });
+    // .then((result) => {
+    //   console.log(result);
+    //   this.setState({
+    //     data: [result.data],
+    //   });
+    //   // always executed
+    // });
   };
 
   showData = () => {
@@ -66,11 +64,13 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <form>
+        <form className="form">
           <input
-            placeholder="YYYY-MM-DD"
+            type="text"
+            placeholder={"YYYY-MM-DD"}
             value={this.state.value}
             onChange={this.handleChange}
+            required
           />
           <button onClick={this.handleSubmit}>Отправить</button>
         </form>
