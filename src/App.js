@@ -12,14 +12,19 @@ class App extends React.Component {
     this.state = {
       data: [],
       value: "",
+      startValue: "",
+      endValue: "",
     };
   }
 
   handleChange = (event) => {
+    const name = event.target.name;
     this.setState({
-      value: event.target.value,
+      [name]: event.target.value,
     });
-    console.log(this.state.value);
+    // console.log(this.state.value);
+    // console.log(this.state.startValue);
+    // console.log(this.state.endValue);
   };
 
   handleSubmit = (event) => {
@@ -27,32 +32,45 @@ class App extends React.Component {
     this.componentDidMount();
   };
 
+  handleSubmitInterval = (event) => {
+    event.preventDefault();
+    this.componentDidMountInterval();
+  };
+
   componentDidMount = () => {
-    getData(this.state.value, this.state.startDate, this.state.endDate)
+    getData(this.state.value, this.state.startValue, this.state.endValue)
       .then((result) => {
         console.log(result);
         this.setState({
           data: [result.data],
         });
-        // console.log(this.state.data);
+        console.log(this.state.data);
       })
       .catch(function (error) {
         // handle error
         console.log(error);
       });
-    // .then((result) => {
-    //   console.log(result);
-    //   this.setState({
-    //     data: [result.data],
-    //   });
-    //   // always executed
-    // });
+  };
+
+  componentDidMountInterval = () => {
+    getData(this.state.value, this.state.startValue, this.state.endValue)
+      .then((result) => {
+        console.log(result);
+        this.setState({
+          data: [...result.data],
+        });
+        console.log(this.state.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
   };
 
   showData = () => {
     return this.state.data.map((item) => (
       <ListItems
-        key={item.date + item.explanation + item.url}
+        key={item.date + item.explanation + item.title + item.url}
         date={item.date}
         explanation={item.explanation}
         title={item.title}
@@ -66,13 +84,30 @@ class App extends React.Component {
       <div>
         <form className="form">
           <input
-            type="text"
+            name="value"
             placeholder={"YYYY-MM-DD"}
             value={this.state.value}
             onChange={this.handleChange}
             required
           />
           <button onClick={this.handleSubmit}>Отправить</button>
+        </form>
+        <form className="form">
+          <input
+            name="startValue"
+            placeholder={"YYYY-MM-DD"}
+            value={this.state.startValue}
+            onChange={this.handleChange}
+            required
+          />
+          <input
+            name="endValue"
+            placeholder={"YYYY-MM-DD"}
+            value={this.state.endValue}
+            onChange={this.handleChange}
+            required
+          />
+          <button onClick={this.handleSubmitInterval}>Отправить</button>
         </form>
         <div>{this.showData()}</div>
       </div>

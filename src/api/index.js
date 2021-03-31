@@ -3,17 +3,13 @@ import axios from "axios";
 import config from "../config/config.json";
 
 const getData = (currentDate, startDate, endDate) => {
-  switch (currentDate) {
-    case currentDate:
+  switch (currentDate || (startDate, endDate)) {
+    case currentDate: // if (x === 'value1')
       return axios.get(
         config.apiUrl + "?api_key=" + config.apiKey + "&date=" + currentDate
       );
-    //   break;
-    default:
-      console.log("error");
-  }
-  switch ((startDate, endDate)) {
-    case (startDate, endDate):
+
+    case (startDate, endDate): // if (x === 'value2')
       return axios.get(
         config.apiUrl +
           "?api_key=" +
@@ -23,7 +19,7 @@ const getData = (currentDate, startDate, endDate) => {
           "&end_date=" +
           endDate
       );
-    //   break;
+
     default:
       console.log("error");
   }
